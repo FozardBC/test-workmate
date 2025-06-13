@@ -1,0 +1,10 @@
+{"time":"2025-06-10T14:34:29.228384159+03:00","level":"INFO","source":{"function":"main.main","file":"/home/fzrdub/go/testWorkMate/cmd/app/main.go","line":14},"msg":"App is starting"}
+{"time":"2025-06-12T14:01:49.95612639+03:00","level":"INFO","source":{"function":"main.main","file":"/home/fzrdub/go/testWorkMate/cmd/app/main.go","line":25},"msg":"App is starting"}
+{"time":"2025-06-12T14:02:39.220227537+03:00","level":"INFO","source":{"function":"main.main","file":"/home/fzrdub/go/testWorkMate/cmd/app/main.go","line":25},"msg":"App is starting"}
+{"time":"2025-06-12T14:02:39.220390041+03:00","level":"INFO","source":{"function":"main.main","file":"/home/fzrdub/go/testWorkMate/cmd/app/main.go","line":66},"msg":"HTTP server is runned","addres":"localhost:8080"}
+{"time":"2025-06-12T14:02:39.220421825+03:00","level":"INFO","source":{"function":"main.main","file":"/home/fzrdub/go/testWorkMate/cmd/app/main.go","line":68},"msg":"App is started"}
+{"time":"2025-06-12T14:02:39.220419243+03:00","level":"INFO","source":{"function":"main.main.func2","file":"/home/fzrdub/go/testWorkMate/cmd/app/main.go","line":54},"msg":"Started to ping databse"}
+{"time":"2025-06-12T14:02:39.220437101+03:00","level":"INFO","source":{"function":"main.main.func1","file":"/home/fzrdub/go/testWorkMate/cmd/app/main.go","line":49},"msg":"HTTP server started","Addres":"localhost:8080"}
+{"time":"2025-06-12T14:02:53.419478492+03:00","level":"ERROR","source":{"function":"main.main","file":"/home/fzrdub/go/testWorkMate/cmd/app/main.go","line":77},"msg":"received signal, starting graceful shutdown","signal":2}
+{"time":"2025-06-12T14:02:53.419603821+03:00","level":"INFO","source":{"function":"test-app/internal/storage/ram.(*MemStorage).Close","file":"/home/fzrdub/go/testWorkMate/internal/storage/ram/ram.go","line":64},"msg":"Storage is closed"}
+{"time":"2025-06-12T14:02:53.419617827+03:00","level":"INFO","source":{"function":"main.main","file":"/home/fzrdub/go/testWorkMate/cmd/app/main.go","line":92},"msg":"shutdown completed"}
