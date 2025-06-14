@@ -1,0 +1,15 @@
+services:
+  server:
+    build: 
+      context: ../
+      dockerfile: Dockerfile
+
+    container_name: server-cont
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      - LOG_MODE=debug
+      - SRV_HOST=0.0.0.0
+      - SRV_PORT=8080
