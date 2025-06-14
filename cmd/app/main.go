@@ -14,6 +14,15 @@ import (
 	"time"
 )
 
+// @title Test-task
+// @version 1.0
+// @description Тестовое задание по вакансии WorkMate. Сервис, который организует хранение задач, их статуса, результата, во время их обработки сторонней логикой.
+
+// @contact.Name Samir
+// @contact.email fzrd2000@gmail.com
+
+// @host localhost:8080
+// @BasePath /api/v1/
 func main() {
 
 	ctx := context.Background()

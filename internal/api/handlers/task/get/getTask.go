@@ -20,6 +20,18 @@ type TaskGetter interface {
 	Task(ctx context.Context, id int64) (*models.Task, error)
 }
 
+// New godoc
+// @Summary      Get a task by ID
+// @Description  Retrieve a task with the specified ID. Returns the task details if found.
+// @Tags         tasks
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int64  true  "Task ID"
+// @Success      200  {object}  response.Response{payload=models.Task}  "Task details"
+// @Failure      400  {object}  response.Response{status=string,error=string}  "Invalid task ID"
+// @Failure      404  {object}  response.Response{error=string}  "Task not found"
+// @Failure      500  {object}  response.Response{error=string}  "Internal server error"
+// @Router       /tasks/{id} [get]
 func New(log *slog.Logger, taskGetter TaskGetter) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()
@@ -44,7 +56,7 @@ func New(log *slog.Logger, taskGetter TaskGetter) gin.HandlerFunc {
 			if errors.Is(err, storage.ErrTaskNotFound) {
 				logHandler.Debug("Task is not exists", "id", id)
 
-				c.JSON(http.StatusNoContent, response.OK())
+				c.JSON(http.StatusNotFound, response.Error("Task is not exists"))
 
 				return
 			}

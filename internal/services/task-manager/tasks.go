@@ -16,6 +16,10 @@ type Manager struct {
 	Log     *slog.Logger
 }
 
+var (
+	ErrDeleteTask = errors.New("failed to delete task")
+)
+
 func New(storage storage.Storage, log *slog.Logger) *Manager {
 	return &Manager{
 		Storage: storage,
@@ -69,9 +73,15 @@ func (m *Manager) DeleteTask(ctx context.Context, id int64) error {
 	m.Log.Debug("starting to delete task", "id", id)
 
 	if err := m.Storage.Delete(ctx, id); err != nil {
-		m.Log.Error("failed to delete task", "id", id, "error", err)
+		if errors.Is(err, storage.ErrTaskNotFound) {
+			m.Log.Debug(ErrDeleteTask.Error(), "err", err.Error())
 
-		return fmt.Errorf("failed to delete task:%w", err)
+			return fmt.Errorf("%w:%w", ErrDeleteTask, err)
+		}
+
+		m.Log.Error(ErrDeleteTask.Error(), "id", id, "error", err)
+
+		return fmt.Errorf("%w:%w", ErrDeleteTask, err)
 	}
 
 	m.Log.Debug("task deleted")

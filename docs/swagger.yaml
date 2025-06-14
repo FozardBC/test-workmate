@@ -1,0 +1,204 @@
+basePath: /api/v1/
+definitions:
+  addTask.Request:
+    properties:
+      task_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+    required:
+    - task_name
+    type: object
+  models.Task:
+    properties:
+      created_at:
+        type: string
+      duration:
+        $ref: '#/definitions/time.Duration'
+      finished_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      result: {}
+      status:
+        $ref: '#/definitions/models.TaskStatus'
+    type: object
+  models.TaskStatus:
+    properties:
+      err: {}
+      status:
+        type: string
+    type: object
+  response.Response:
+    description: all respones based on this and can overwrite this
+    properties:
+      error:
+        type: string
+      payload: {}
+      status:
+        type: string
+    type: object
+  time.Duration:
+    enum:
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    type: integer
+    x-enum-varnames:
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+host: localhost:8080
+info:
+  contact:
+    email: fzrd2000@gmail.com
+    name: Samir
+  description: Тестовое задание по вакансии WorkMate. Сервис, который организует хранение
+    задач, их статуса, результата, во время их обработки сторонней логикой.
+  title: Test-task
+  version: "1.0"
+paths:
+  /tasks:
+    post:
+      consumes:
+      - application/json
+      description: add task with custom name
+      parameters:
+      - description: Task create request
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/addTask.Request'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            Location:
+              description: URL of the created task (e.g., /tasks/123)
+              type: string
+            x-request-id:
+              description: request-id
+              type: string
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add the new task
+      tags:
+      - tasks
+  /tasks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a task with the specified ID. Returns no content if successful.
+        If the task is not found, returns an error message.
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid task ID
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "404":
+          description: Task not found
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "500":
+          description: Internal server error
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Delete a task by ID
+      tags:
+      - tasks
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a task with the specified ID. Returns the task details
+        if found.
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task details
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                payload:
+                  $ref: '#/definitions/models.Task'
+              type: object
+        "400":
+          description: Invalid task ID
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                error:
+                  type: string
+                status:
+                  type: string
+              type: object
+        "404":
+          description: Task not found
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                error:
+                  type: string
+              type: object
+        "500":
+          description: Internal server error
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                error:
+                  type: string
+              type: object
+      summary: Get a task by ID
+      tags:
+      - tasks
+swagger: "2.0"

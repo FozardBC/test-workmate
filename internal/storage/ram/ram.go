@@ -12,6 +12,8 @@ import (
 )
 
 var (
+	taskIDKey = "taskID"
+
 	ErrContextCancelledBef = errors.New("context cancelled before lock mutex")
 	ErrContextCancelled    = errors.New("context cancelled")
 )
@@ -57,7 +59,7 @@ func (s *MemStorage) Save(ctx context.Context, task *models.Task) (int64, error)
 func (s *MemStorage) Delete(ctx context.Context, id int64) error {
 
 	if err := ctx.Err(); err != nil {
-		s.Log.Debug(ErrContextCancelledBef.Error(), "taskID", id)
+		s.Log.Debug(ErrContextCancelledBef.Error(), taskIDKey, id)
 
 		return fmt.Errorf("%w:%w", ErrContextCancelledBef, err)
 	}
@@ -67,10 +69,17 @@ func (s *MemStorage) Delete(ctx context.Context, id int64) error {
 
 	select {
 	case <-ctx.Done():
-		s.Log.Debug(ErrContextCancelledBef.Error(), "taskID", id)
+		s.Log.Debug(ErrContextCancelledBef.Error(), taskIDKey, id)
 
 		return fmt.Errorf("%w:%w", ErrContextCancelled, ctx.Err())
 	default:
+	}
+
+	_, exists := s.Tasks[id]
+	if !exists {
+		s.Log.Debug(storage.ErrTaskNotFound.Error(), taskIDKey, id)
+
+		return storage.ErrTaskNotFound
 	}
 
 	delete(s.Tasks, id)
@@ -80,7 +89,7 @@ func (s *MemStorage) Delete(ctx context.Context, id int64) error {
 
 func (s *MemStorage) Task(ctx context.Context, id int64) (*models.Task, error) {
 	if err := ctx.Err(); err != nil {
-		s.Log.Debug(ErrContextCancelledBef.Error(), "taskID", id)
+		s.Log.Debug(ErrContextCancelledBef.Error(), taskIDKey, id)
 
 		return nil, fmt.Errorf("%w:%w", ErrContextCancelledBef, err)
 	}
@@ -90,7 +99,7 @@ func (s *MemStorage) Task(ctx context.Context, id int64) (*models.Task, error) {
 
 	select {
 	case <-ctx.Done():
-		s.Log.Debug(ErrContextCancelledBef.Error(), "taskID", id)
+		s.Log.Debug(ErrContextCancelledBef.Error(), taskIDKey, id)
 
 		return nil, fmt.Errorf("%w:%w", ErrContextCancelled, ctx.Err())
 	default:
@@ -98,7 +107,7 @@ func (s *MemStorage) Task(ctx context.Context, id int64) (*models.Task, error) {
 
 	task, exists := s.Tasks[id]
 	if !exists {
-		s.Log.Error(storage.ErrTaskNotFound.Error(), "taskID", id)
+		s.Log.Error(storage.ErrTaskNotFound.Error(), taskIDKey, id)
 
 		return nil, storage.ErrTaskNotFound
 	}
